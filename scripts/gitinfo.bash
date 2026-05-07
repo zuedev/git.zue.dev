@@ -2,17 +2,19 @@
 
 for repository in /repositories/*; do
   cd /repositories/$(basename "$repository")
-  gitinfo=$(git cat-file -p @:.gitinfo 2>&1)
+  gitinfoExists=$(git ls-tree HEAD -- .gitinfo 2>/dev/null)
 
-  # does gitinfo exist? expect "fatal" if not
-  if [[ $gitinfo == fatal* ]]; then
+  # does gitinfo exist?
+  if [ -z "$gitinfoExists" ]; then
     echo "No .gitinfo found for $(basename "$repository"). Blanking description."
     echo "" > /repositories/$(basename "$repository")/description
     continue
   fi
 
+  gitinfoContents=$(git cat-file -p @:.gitinfo)
+
   # extract description from gitinfo (json format)
-  description=$(echo "$gitinfo" | grep -oP '"description":\s*"\K[^"]+')
+  description=$(echo "$gitinfoContents" | grep -oP '"description":\s*"\K[^"]+')
 
   # write description to repository description file
   echo "$description" > /repositories/$(basename "$repository")/description
