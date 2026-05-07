@@ -1,0 +1,15 @@
+# This Dockerfile sets up a CGit server using an Alpine Linux base image. It configures CGit with custom settings and serves the repositories from a specified directory.
+
+# Start with a base Alpine image that has CGit installed
+FROM joseluisq/alpine-cgit:2.9.0
+
+ENV USE_CUSTOM_CONFIG="true"
+
+# Copy the custom cgit configuration file into the container
+COPY cgitrc /etc/cgitrc
+
+# Copy the root readme file into the container
+COPY root-readme.html /root-readme.html
+
+# Copy the header file into the container
+COPY header.html /header.html
