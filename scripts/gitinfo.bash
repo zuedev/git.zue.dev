@@ -6,7 +6,8 @@ for repository in /repositories/*; do
 
   # does gitinfo exist? expect "fatal" if not
   if [[ $gitinfo == fatal* ]]; then
-    echo "No .gitinfo found for $(basename "$repository")"
+    echo "No .gitinfo found for $(basename "$repository"). Blanking description."
+    echo "" > /repositories/$(basename "$repository")/description
     continue
   fi
 
