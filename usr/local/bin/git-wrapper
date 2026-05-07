@@ -11,6 +11,7 @@ fi
 cmd=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d' ' -f1)
 path=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d"'" -f2)
 
+# Block path traversal attempts
 if [[ "$path" == *..* ]]; then
     echo "Invalid path" >&2
     exit 1
