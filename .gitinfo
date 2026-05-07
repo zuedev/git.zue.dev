@@ -1,5 +1,8 @@
 {
   "$schema": "https://onedev.docker-compose.zue.dev/gitinfo/~raw/main/gitinfo.schema.json",
   "root": "https://git.zue.dev/git.zue.dev",
-  "description": "Server configuration for my git server, powered by Docker."
+  "description": "Server configuration for my git server, powered by Docker.",
+  "mirrors": [
+    "https://github.com/zuedev/git.zue.dev"
+  ]
 }
