@@ -1,0 +1,1 @@
+* * * * * git /bin/bash /scripts/push-repo-mirrors.bash >> /home/git/.logs/push-repo-mirrors.log 2>&1
