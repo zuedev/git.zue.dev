@@ -1,16 +1,26 @@
 #!/bin/bash
-# Prepend /repositories/ to bare repo paths in git SSH commands
-case "$SSH_ORIGINAL_COMMAND" in
-  git-upload-pack\'*|git-receive-pack\'*|git-upload-archive\'*)
-    cmd="${SSH_ORIGINAL_COMMAND%\'*}"
-    path="${SSH_ORIGINAL_COMMAND##*\'}"
-    path="${path%\'}"
-    # Prepend /repositories/ if not an absolute path
-    [[ "$path" != /* ]] && path="/repositories/$path"
-    exec $cmd "'$path'"
-    ;;
-  *)
-    echo "Invalid command" >&2
+# This script acts as a wrapper for git commands when the git user connects via SSH. It ensures that only allowed git commands are executed and that they are executed in the correct context.
+
+# Check if the SSH_ORIGINAL_COMMAND environment variable is set. This variable contains the command that the user attempted to execute when connecting via SSH.
+if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
+    echo "Interactive login not permitted" >&2
     exit 1
-    ;;
+fi
+
+# Parse the SSH_ORIGINAL_COMMAND to extract the git command and the repository path. The expected format is something like "git-upload-pack 'repository.git'".
+cmd=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d' ' -f1)
+path=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d"'" -f2)
+
+case "$cmd" in
+    # Allow only specific git commands and ensure that the repository path is correctly prefixed with /repositories if it's not an absolute path.
+    git-upload-pack|git-receive-pack|git-upload-archive)
+        # If the path is not an absolute path, prefix it with /repositories to ensure that all git operations are confined to the /repositories directory.
+        [[ "$path" != /* ]] && path="/repositories/$path"
+        exec "$cmd" "$path"
+        ;;
+    # If the command is not one of the allowed git commands, reject it and print an error message.
+    *)
+        echo "Command not allowed: $cmd" >&2
+        exit 1
+        ;;
 esac
