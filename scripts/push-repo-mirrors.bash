@@ -39,8 +39,9 @@ for repository in /repositories/*; do
 
         GITHUB_TOKEN=$(cat /run/secrets/github_token)
 
+        mirror_host="${mirror#https://}"
         echo "Pushing to GitHub mirror: $mirror"
-        git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror" || echo "Failed to push to $mirror"
+        git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" || echo "Failed to push to $mirror"
         ;;
       *)
         echo "Unknown mirror type: $mirror. Skipping."
