@@ -34,6 +34,9 @@ scan-path=/srv/git
 # this has to be empty for cgit to work with a reverse proxy
 virtual-root=
 
+# use the first path component of the repository path as the section name
+section-from-path=1
+
 #
 # Search for these files in the root of the default branch of repositories
 # for coming up with the about page:
