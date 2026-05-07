@@ -11,6 +11,11 @@ fi
 cmd=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d' ' -f1)
 path=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d"'" -f2)
 
+if [[ "$path" == *..* ]]; then
+    echo "Invalid path" >&2
+    exit 1
+fi
+
 case "$cmd" in
     # Allow only specific git commands and ensure that the repository path is correctly prefixed with /repositories if it's not an absolute path.
     git-upload-pack|git-receive-pack|git-upload-archive)
