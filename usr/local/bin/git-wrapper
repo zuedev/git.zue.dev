@@ -7,6 +7,12 @@ if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
     exit 1
 fi
 
+# Normalize the SSH_ORIGINAL_COMMAND as modern Git clients can send either form depending on version and protocol negotiation
+SSH_ORIGINAL_COMMAND=$(echo "$SSH_ORIGINAL_COMMAND" | sed \
+    's/^git upload-pack/git-upload-pack/;
+     s/^git receive-pack/git-receive-pack/;
+     s/^git upload-archive/git-upload-archive/')
+
 # Parse the SSH_ORIGINAL_COMMAND to extract the git command and the repository path. The expected format is something like "git-upload-pack 'repository.git'".
 cmd=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d' ' -f1)
 path=$(echo "$SSH_ORIGINAL_COMMAND" | cut -d"'" -f2)
