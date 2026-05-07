@@ -48,6 +48,21 @@ for repository in /repositories/*; do
         GITHUB_TOKEN=$(cat /run/secrets/github_token)
 
         mirror_host="${mirror#https://}"
+
+        # Update the GitHub repo's default branch to match the local HEAD before mirroring,
+        # so that --mirror can delete any branch that was previously the default.
+        local_default=$(git symbolic-ref --short HEAD 2>/dev/null)
+        github_repo="${mirror#https://github.com/}"
+        if [ -n "$local_default" ]; then
+          echo "Setting GitHub default branch to '$local_default' for $github_repo"
+          curl -sf -X PATCH \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d "{\"default_branch\":\"$local_default\"}" \
+            "https://api.github.com/repos/$github_repo" > /dev/null \
+            || echo "Warning: failed to update default branch on GitHub for $github_repo"
+        fi
+
         echo "Pushing to GitHub mirror: $mirror"
         git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" 2>&1 | sed "s/$GITHUB_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
         ;;
