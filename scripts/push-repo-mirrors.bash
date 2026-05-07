@@ -22,12 +22,13 @@ for repository in /repositories/*; do
   echo "gitinfoContents: $gitinfoContents"
 
   # extract mirrors from gitinfo (json format)
-  mirrors=$(echo "$gitinfoContents" | grep -oP '"mirrors":\s*\[\K[^\]]+')
+  mirrors=$(echo "$gitinfoContents" | jq -r '.mirrors[]')
 
   echo "Extracted mirrors: $mirrors"
 
   # push to each mirror
-  for mirror in $(echo "$mirrors" | tr ',' '\n'); do
+  while IFS= read -r mirror; do
+    [ -z "$mirror" ] && continue
     case "$mirror" in
       *github.com*)
         # do we have a /run/secrets/github_token defined?
@@ -45,5 +46,5 @@ for repository in /repositories/*; do
         echo "Unknown mirror type: $mirror. Skipping."
         ;;
     esac
-  done
+  done <<< "$mirrors"
 done
