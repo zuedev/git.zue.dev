@@ -1,0 +1,16 @@
+#!/bin/bash
+# Prepend /repositories/ to bare repo paths in git SSH commands
+case "$SSH_ORIGINAL_COMMAND" in
+  git-upload-pack\'*|git-receive-pack\'*|git-upload-archive\'*)
+    cmd="${SSH_ORIGINAL_COMMAND%\'*}"
+    path="${SSH_ORIGINAL_COMMAND##*\'}"
+    path="${path%\'}"
+    # Prepend /repositories/ if not an absolute path
+    [[ "$path" != /* ]] && path="/repositories/$path"
+    exec $cmd "'$path'"
+    ;;
+  *)
+    echo "Invalid command" >&2
+    exit 1
+    ;;
+esac

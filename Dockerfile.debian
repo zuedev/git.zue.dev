@@ -40,6 +40,16 @@ RUN chmod +x /scripts/*
 # Copy git home overlay
 COPY home/git/* /home/git/
 
+# Copy git-wrapper
+COPY usr/local/bin/git-wrapper /usr/local/bin/git-wrapper
+
+# Set appropriate permissions for the git-wrapper
+RUN chmod +x /usr/local/bin/git-wrapper
+
+# Add our git-wrapper to a new Match block in the sshd_config
+RUN echo "Match User git" >> /etc/ssh/sshd_config && \
+    echo "    ForceCommand /usr/local/bin/git-wrapper" >> /etc/ssh/sshd_config
+
 # Make the entrypoint script executable
 RUN chmod +x /entrypoint.bash
 

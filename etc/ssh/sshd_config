@@ -1,0 +1,2 @@
+Match User git
+    ForceCommand /usr/local/bin/git-wrapper
