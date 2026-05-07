@@ -5,8 +5,11 @@
 # Do we have an authorized_keys environment variable?
 if [ -n "$AUTHORIZED_KEYS" ]; then
     echo "Setting up authorized_keys..."
+    mkdir -p /root/.ssh
     mkdir -p /home/git/.ssh
+    echo "$AUTHORIZED_KEYS" > /root/.ssh/authorized_keys
     echo "$AUTHORIZED_KEYS" > /home/git/.ssh/authorized_keys
+    chmod 600 /root/.ssh/authorized_keys
     chmod 600 /home/git/.ssh/authorized_keys
     chown -R git:git /home/git/.ssh
 else
