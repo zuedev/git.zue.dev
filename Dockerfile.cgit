@@ -13,3 +13,6 @@ COPY root-readme.html /root-readme.html
 
 # Copy the header file into the container
 COPY header.html /header.html
+
+# Copy the CSS file into the container
+COPY cgit.css /cgit.css
