@@ -2,7 +2,7 @@
 
 for repository in /repositories/*; do
   cd /repositories/$(basename "$repository")
-  gitinfo=$(git cat-file -p @:.gitinfo)
+  gitinfo=$(git cat-file -p @:.gitinfo 2>&1)
 
   # does gitinfo exist? expect "fatal" if not
   if [[ $gitinfo == fatal* ]]; then
