@@ -22,6 +22,13 @@ case "$cmd" in
     git-upload-pack|git-receive-pack|git-upload-archive)
         # If the path is not an absolute path, prefix it with /repositories to ensure that all git operations are confined to the /repositories directory.
         [[ "$path" != /* ]] && path="/repositories/$path"
+
+        # Check if the repository exists at the specified path
+        if [ ! -d "$path" ]; then
+            echo "Repository not found: $path" >&2
+            exit 1
+        fi
+
         exec "$cmd" "$path"
         ;;
     # If the command is not one of the allowed git commands, reject it and print an error message.
