@@ -18,6 +18,10 @@ fi
 chown -R git:git /home/git
 chown -R git:git /repositories
 
+# Start the cron service
+echo "Starting cron service..."
+cron
+
 # Start the SSH service in the background
 echo "Starting SSH service..."
 /usr/sbin/sshd -D -E /var/log/sshd.log &
