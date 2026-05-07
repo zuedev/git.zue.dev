@@ -1,1 +1,1 @@
-* * * * * root /bin/bash /scripts/gitinfo.bash >> /var/log/gitinfo.log 2>&1
+* * * * * git /bin/bash /scripts/gitinfo.bash >> /var/log/gitinfo.log 2>&1
