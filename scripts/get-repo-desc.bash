@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 for repository in /repositories/*; do
   echo "Processing repository: $(basename "$repository")"
