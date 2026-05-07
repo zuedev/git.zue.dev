@@ -7,6 +7,27 @@ if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
     exit 1
 fi
 
+# Handle git init to create new bare repositories
+if [[ "$SSH_ORIGINAL_COMMAND" == git\ init* ]]; then
+    repo=$(echo "$SSH_ORIGINAL_COMMAND" | awk '{print $NF}')
+
+    # Block path traversal attempts and absolute paths
+    if [[ "$repo" == *..* ]] || [[ "$repo" == /* ]]; then
+        echo "Invalid path" >&2
+        exit 1
+    fi
+
+    path="/repositories/$repo"
+
+    # Check if the repository already exists
+    if [ -d "$path" ]; then
+        echo "Repository already exists: $repo" >&2
+        exit 1
+    fi
+
+    exec git init --bare "$path"
+fi
+
 # Normalize the SSH_ORIGINAL_COMMAND as modern Git clients can send either form depending on version and protocol negotiation
 SSH_ORIGINAL_COMMAND=$(echo "$SSH_ORIGINAL_COMMAND" | sed \
     's/^git upload-pack/git-upload-pack/;
