@@ -49,7 +49,7 @@ for repository in /repositories/*; do
 
         mirror_host="${mirror#https://}"
         echo "Pushing to GitHub mirror: $mirror"
-        git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" || echo "Failed to push to $mirror"
+        git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" 2>&1 | sed "s/$GITHUB_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
         ;;
       *)
         echo "Unknown mirror type: $mirror. Skipping."
