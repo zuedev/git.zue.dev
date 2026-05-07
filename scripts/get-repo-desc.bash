@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script extracts the repository description from the .gitinfo file and writes it to the repository's description file.
+
 LOCK_FILE=/var/lock/get-repo-desc.lock
 
 exec 9>"$LOCK_FILE"
