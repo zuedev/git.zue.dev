@@ -1,2 +1,7 @@
 Match User git
     ForceCommand /usr/local/bin/git-wrapper
+    AllowAgentForwarding no
+    AllowTcpForwarding no
+    X11Forwarding no
+    PermitTTY no
+    PermitUserRC no
