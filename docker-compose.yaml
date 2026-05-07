@@ -32,6 +32,9 @@ services:
         # Copy cron jobs
         COPY etc/cron.d/* /etc/cron.d/
 
+        # Set appropriate permissions for the cron jobs
+        RUN chmod 0644 /etc/cron.d/*
+
         # Copy scripts
         COPY scripts/* /scripts/
 
