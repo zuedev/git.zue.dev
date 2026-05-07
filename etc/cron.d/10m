@@ -1,0 +1,1 @@
+* * * * * /bin/bash /scripts/mirrors.bash >> /var/log/mirrors.log 2>&1

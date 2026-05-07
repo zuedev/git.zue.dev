@@ -29,6 +29,15 @@ services:
         # Copy the entrypoint script into the container
         COPY entrypoint.bash /
 
+        # Copy cron jobs
+        COPY etc/cron.d/* /etc/cron.d/
+
+        # Copy scripts
+        COPY scripts/* /scripts/
+
+        # Set appropriate permissions for the scripts
+        RUN chmod +x /scripts/*
+
         # Make the entrypoint script executable
         RUN chmod +x /entrypoint.bash
 
