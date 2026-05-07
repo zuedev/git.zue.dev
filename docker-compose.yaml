@@ -9,6 +9,7 @@ services:
     volumes:
       - ./repositories:/repositories
       - ./.secrets/github_token:/run/secrets/github_token:ro
+      - ssh-host-keys:/run/ssh
     network_mode: service:tailscale
     depends_on:
       - tailscale
@@ -37,3 +38,6 @@ services:
       - NET_ADMIN
       - NET_RAW
     restart: unless-stopped
+
+volumes:
+  ssh-host-keys:

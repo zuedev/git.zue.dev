@@ -21,8 +21,16 @@ RUN useradd -m -s /bin/bash git
 # Create the repositories directory and set appropriate permissions
 RUN mkdir -p /repositories && chown git:git /repositories
 
-# Disallow password authentication for security reasons
-RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+# Remove auto-generated SSH host keys so they are not baked into the image.
+# Keys will be generated at container startup and persisted via a volume mount.
+RUN rm -f /etc/ssh/ssh_host_*
+
+# Disallow password authentication for security reasons.
+# Point sshd to the persistent host key location.
+RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "HostKey /run/ssh/ssh_host_rsa_key" >> /etc/ssh/sshd_config && \
+    echo "HostKey /run/ssh/ssh_host_ecdsa_key" >> /etc/ssh/sshd_config && \
+    echo "HostKey /run/ssh/ssh_host_ed25519_key" >> /etc/ssh/sshd_config
 
 # Copy the entrypoint script into the container
 COPY entrypoint.bash /

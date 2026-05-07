@@ -28,6 +28,17 @@ chown -R git:git /repositories
 echo "Starting cron service..."
 cron
 
+# Generate SSH host keys into the persistent volume if they don't exist yet.
+# This keeps keys stable across container rebuilds.
+mkdir -p /run/ssh
+chmod 700 /run/ssh
+if [ ! -f /run/ssh/ssh_host_ed25519_key ]; then
+    echo "Generating SSH host keys..."
+    ssh-keygen -q -N "" -t rsa -b 4096 -f /run/ssh/ssh_host_rsa_key
+    ssh-keygen -q -N "" -t ecdsa -f /run/ssh/ssh_host_ecdsa_key
+    ssh-keygen -q -N "" -t ed25519 -f /run/ssh/ssh_host_ed25519_key
+fi
+
 # Start the SSH service in the background
 echo "Starting SSH service..."
 /usr/sbin/sshd -D -E /var/log/sshd.log &
