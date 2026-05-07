@@ -55,12 +55,14 @@ for repository in /repositories/*; do
         github_repo="${mirror#https://github.com/}"
         if [ -n "$local_default" ]; then
           echo "Setting GitHub default branch to '$local_default' for $github_repo"
-          curl -sf -X PATCH \
+          if ! curl -sf -X PATCH \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -d "{\"default_branch\":\"$local_default\"}" \
-            "https://api.github.com/repos/$github_repo" > /dev/null \
-            || echo "Warning: failed to update default branch on GitHub for $github_repo"
+            "https://api.github.com/repos/$github_repo" > /dev/null; then
+            echo "Error: failed to update default branch on GitHub for $github_repo. Skipping push."
+            continue
+          fi
         fi
 
         echo "Pushing to GitHub mirror: $mirror"
