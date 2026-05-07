@@ -4,6 +4,7 @@ root-title=git.zue.dev
 root-desc=If it's on this site, I'm working on it.
 root-readme=/root-readme.html
 header=/header.html
+css=/cgit.css
 
 # enable commit graph on repo "log" page
 enable-commit-graph=1
