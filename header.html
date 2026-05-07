@@ -1,0 +1,25 @@
+<!-- import DarkReader -->
+<script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.125/darkreader.min.js"></script>
+
+<!-- import hljs -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+<!-- run main script -->
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    // apply syntax highlighting to all code blocks
+    document.querySelectorAll("pre code").forEach((block) => {
+      hljs.highlightElement(block);
+    });
+
+    // set fetch method for DarkReader to use the same origin policy
+    DarkReader.setFetchMethod(window.fetch);
+
+    // auto-enable dark mode if user has set it as their preference
+    DarkReader.auto();
+  });
+</script>

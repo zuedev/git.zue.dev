@@ -1,0 +1,81 @@
+services:
+  git:
+    build:
+      context: .
+      dockerfile_inline: |
+        # This Dockerfile sets up a simple SSH server for hosting git repositories. It installs the necessary packages, creates the required directories, and configures SSH to allow access using authorized keys.
+
+        # Start with a base Debian image
+        FROM debian:13.4
+
+        # Install dependencies and clean up apt cache to reduce image size
+        RUN apt-get update && apt-get install -y --no-install-recommends \
+          openssh-server \
+          git \
+          && rm -rf /var/lib/apt/lists/*
+
+        # Create the privilage separation directory as openssh-server post-install script doesn't do it in docker build context
+        RUN mkdir -p /var/run/sshd
+
+        # Create a git user and set up the home directory
+        RUN useradd -m -s /bin/bash git
+
+        # Create the repositories directory and set appropriate permissions
+        RUN mkdir -p /repositories && chown git:git /repositories
+
+        # Disallow password authentication for security reasons
+        RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+
+        # Copy the entrypoint script into the container
+        COPY entrypoint.bash /
+
+        # Make the entrypoint script executable
+        RUN chmod +x /entrypoint.bash
+
+        # Expose port 22 for SSH access
+        EXPOSE 22
+
+        # Define our entrypoint
+        ENTRYPOINT [ "/entrypoint.bash" ]
+    environment:
+      AUTHORIZED_KEYS: |
+        ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0kwVbA9ZdXOAuiyPeXsJ7HSujPtCIYtFPl2GdajHDT0SwsZDUMNr/p6Y9DyQjOI1zqD73ndGSOIe6EY7adB3L6ZSODvDwFlGMtP5sXE0UESOcJJdU7m4wHWieM3xal5nz1Y2BJyp2x04Ol5+kpak9A4MqUcHz29Z4ubgPG/UUWENoKZIfHXSCZfvJBO82InrvieAu/dpKzmtkXNJ9bP+fSkiNnCOVo+ZvCbIuZm8tOoQIhshzdeVhfNmdUj9LNErkoGoJ+CA13eXYlqT9B8o45E+M8lLxQr/RpzCk/3likszBzVqITB6Vkrvey8BcHhcbrs+5LYbxvb6s+1bsRHNAwO+w7SgrD3eX8AQqFKvb6xzrFji+996NWSC2hVLcKZyDvSM2p6ws4IDLFLD64IS+73SEZv2fN847j0vmqJqXYPpB/jQKuUG+rWeonkDXBfPjFrHtp75nk5bSBBDi+LQBGW52nz6/gtOWP46USV46BW2zF+YFSyw/2Ta7DMhrvXlLWuDV/CpK0FytpHjQWjHoiDfrZfiDAOu8sPIiH7hjZevHqzNJ+xOZDNqNbYqxxB1gLeK4u6xX9c4Jkk259r09tMutFACbzxxPQr3LYBKW8IrPcX1rfuE4+aZ1UysfjG/2FmKOPeWca9tVSQUK7RSThvzWDGdm0gXxI0HrPwmfZQ== zuedev
+    ports:
+      - "2222:22"
+    volumes:
+      - ./repositories:/repositories
+  
+  cgit:
+    build:
+      context: .
+      dockerfile_inline: |
+        # This Dockerfile sets up a CGit server using an Alpine Linux base image. It configures CGit with custom settings and serves the repositories from a specified directory.
+
+        # Start with a base Alpine image that has CGit installed
+        FROM joseluisq/alpine-cgit:2.9.0
+
+        ENV USE_CUSTOM_CONFIG="true"
+
+        # Copy the custom cgit configuration file into the container
+        COPY cgitrc /etc/cgitrc
+
+        # Copy the root readme file into the container
+        COPY root-readme.html /root-readme.html
+
+        # Copy the header file into the container
+        COPY header.html /header.html
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./cgitrc
+          target: /etc/cgitrc
+        - action: sync+restart
+          path: ./root-readme.html
+          target: /root-readme.html
+        - action: sync+restart
+          path: ./header.html
+          target: /header.html
+    ports:
+      - "8080:80"
+    volumes:
+      - ./repositories:/srv/git:ro
