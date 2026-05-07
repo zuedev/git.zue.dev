@@ -1,4 +1,4 @@
 [alias]
     sync = !git add -A && git commit && git push
     nuke = !git clean -df && git reset --hard
-    prune-remotes = !git pack-refs --all && git update-ref -d refs/remotes/origin/HEAD && git update-ref -d refs/remotes/origin/main
+    prune-remotes = !git pack-refs --all && git update-ref -d refs/remotes/origin/HEAD && git update-ref -d refs/remotes/origin/main -d refs/remotes/origin/master
