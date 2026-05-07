@@ -16,6 +16,7 @@ fi
 
 # Set the correct permissions for the git user
 chown -R git:git /home/git
+chown -R git:git /repositories
 
 # Start the SSH service in the background
 echo "Starting SSH service..."
