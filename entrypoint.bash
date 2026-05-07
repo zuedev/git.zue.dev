@@ -14,6 +14,9 @@ else
     exit 1
 fi
 
+# Create the log directory for cron jobs
+mkdir -p /home/git/.logs
+
 # Set the correct permissions for the git user
 chown -R git:git /home/git
 chown -R git:git /repositories
