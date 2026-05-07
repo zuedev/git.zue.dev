@@ -1,5 +1,13 @@
 #!/bin/bash
 
+LOCK_FILE=/var/lock/get-repo-desc.lock
+
+exec 9>"$LOCK_FILE"
+if ! flock --nonblock 9; then
+  echo "Another instance is already running. Exiting."
+  exit 1
+fi
+
 for repository in /repositories/*; do
   echo "Processing repository: $(basename "$repository")"
 
