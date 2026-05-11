@@ -33,21 +33,10 @@ snapshots=tar tar.gz tar.bz2 tar.xz zip
 # disable cache to make sure cgit always shows the latest changes
 cache-size=0
 
-scan-path=/srv/git
-
-# maximum length of the repository description shown on the index page
-max-repodesc-length=1000
-
-# enable stats
-max-stats=year
-
-# use the first path component of the repository path as the section name
-section-from-path=1
-
-##
-## Search for these files in the root of the default branch of repositories
-## for coming up with the about page:
-##
+# Keep readme entries above scan-path. cgit applies readme defaults while
+# scanning repositories, so moving this block below scan-path can hide the
+# repo About page.
+# Search these filenames in the default branch for repository About content.
 readme=:README.md
 readme=:readme.md
 readme=:README.mkd
@@ -76,6 +65,17 @@ readme=:INSTALL.txt
 readme=:install.txt
 readme=:INSTALL
 readme=:install
+
+scan-path=/srv/git
+
+# maximum length of the repository description shown on the index page
+max-repodesc-length=1000
+
+# enable stats
+max-stats=year
+
+# use the first path component of the repository path as the section name
+section-from-path=1
 
 # this has to be empty for cgit to work with a reverse proxy
 virtual-root=
