@@ -38,9 +38,6 @@ max-repodesc-length=1000
 # enable stats
 max-stats=year
 
-# this has to be empty for cgit to work with a reverse proxy
-virtual-root=
-
 # use the first path component of the repository path as the section name
 section-from-path=1
 
@@ -76,3 +73,6 @@ readme=:INSTALL.txt
 readme=:install.txt
 readme=:INSTALL
 readme=:install
+
+# this has to be empty for cgit to work with a reverse proxy
+virtual-root=
