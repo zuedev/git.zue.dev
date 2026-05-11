@@ -6,6 +6,9 @@ root-readme=/root-readme.html
 header=/header.html
 css=/cgit.css
 
+# filter to generate the "about" page for repositories
+about-filter=/usr/lib/cgit/filters/about-formatting.sh
+
 # enable commit graph on repo "log" page
 enable-commit-graph=1
 
