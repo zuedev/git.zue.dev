@@ -32,6 +32,9 @@ cache-size=0
 
 scan-path=/srv/git
 
+# maximum length of the repository description shown on the index page
+max-repodesc-length=1000
+
 # this has to be empty for cgit to work with a reverse proxy
 virtual-root=
 
