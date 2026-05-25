@@ -51,6 +51,19 @@ for repository in /repositories/*; do
         echo "Pushing to GitHub mirror: $mirror"
         git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" 2>&1 | sed "s/$GITHUB_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
         ;;
+      *codeberg.org*)
+        # do we have a /run/secrets/codeberg_token defined?
+        if [ ! -f /run/secrets/codeberg_token ]; then
+          echo "/run/secrets/codeberg_token not found. Skipping push to $mirror."
+          continue
+        fi
+
+        CODEBERG_TOKEN=$(cat /run/secrets/codeberg_token)
+
+        mirror_host="${mirror#https://}"
+        echo "Pushing to Codeberg mirror: $mirror"
+        git push --mirror "https://x-access-token:$CODEBERG_TOKEN@$mirror_host" 2>&1 | sed "s/$CODEBERG_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
+        ;;
       *)
         echo "Unknown mirror type: $mirror. Skipping."
         ;;
