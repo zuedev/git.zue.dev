@@ -9,6 +9,7 @@ services:
     volumes:
       - ./repositories:/repositories
       - ./.secrets/github_token:/run/secrets/github_token:ro
+      - ./.secrets/gitlab_token:/run/secrets/gitlab_token:ro
       - ./.secrets/codeberg_token:/run/secrets/codeberg_token:ro
       - ssh-host-keys:/run/ssh
     network_mode: service:tailscale
