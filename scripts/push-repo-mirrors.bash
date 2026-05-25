@@ -51,6 +51,19 @@ for repository in /repositories/*; do
         echo "Pushing to GitHub mirror: $mirror"
         git push --mirror "https://x-access-token:$GITHUB_TOKEN@$mirror_host" 2>&1 | sed "s/$GITHUB_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
         ;;
+      *gitlab.com*)
+        # do we have a /run/secrets/gitlab_token defined?
+        if [ ! -f /run/secrets/gitlab_token ]; then
+          echo "/run/secrets/gitlab_token not found. Skipping push to $mirror."
+          continue
+        fi
+
+        GITLAB_TOKEN=$(cat /run/secrets/gitlab_token)
+
+        mirror_host="${mirror#https://}"
+        echo "Pushing to GitLab mirror: $mirror"
+        git push --mirror "https://oauth2:$GITLAB_TOKEN@$mirror_host" 2>&1 | sed "s/$GITLAB_TOKEN/[REDACTED]/g" || echo "Failed to push to $mirror"
+        ;;
       *codeberg.org*)
         # do we have a /run/secrets/codeberg_token defined?
         if [ ! -f /run/secrets/codeberg_token ]; then
