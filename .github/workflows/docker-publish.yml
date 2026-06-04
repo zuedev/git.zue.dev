@@ -28,11 +28,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}-cgit:latest
+          tags: ghcr.io/${{ github.repository }}/cgit:latest
 
       - name: Build and push debian image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}-debian:latest
+          tags: ghcr.io/${{ github.repository }}/debian:latest
