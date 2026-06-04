@@ -27,6 +27,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile.cgit
           push: true
           tags: ghcr.io/${{ github.repository }}/cgit:latest
 
@@ -34,5 +35,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile.debian
           push: true
           tags: ghcr.io/${{ github.repository }}/debian:latest
